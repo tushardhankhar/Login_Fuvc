@@ -6,9 +6,15 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash , check_password_hash
+from flask_login import LoginManager, login_manager
 
 app = Flask(__name__,template_folder='template')
 app.config['SECRET_KEY'] = 'asff'
+
+#login_manager = LoginManager()
+#login_manager.init_app(app)
+#login_manager.login_view('login')
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -18,6 +24,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 db = SQLAlchemy(app)
 
 Migrate(app,db)
+
+#@login_manager.user_loader
+#def load_user(user_id):
+#    return user.query.get(user_id)
 
 class user(db.Model):
 
@@ -31,13 +41,16 @@ class user(db.Model):
         self.email = email
         self.password = generate_password_hash(password)
     
+    def check_pass(self,password):
+        return check_password_hash(self.password,password)
+    
     def __repr__(self):
         return f"For {self.username} , Email is {self.email} , Password is {self.password}"
 
 class forms(FlaskForm):
 
     Username = StringField('Username',validators=[DataRequired()])
-    Email = StringField('Email',validators=[DataRequired(),Email()])
+    Email = StringField('Email',validators=[DataRequired(),Email(message='Email not correct')])
     Password = PasswordField('Password')
     select = SelectField('So you Agree with terms',choices=[('yes','yes'),('no','no')])
     Submit = SubmitField('Submit')
