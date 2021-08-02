@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1>Welcome to registration page</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        {{ form.Username.label }} {{ form.Username() }}
+        <br>
+        {{ form.Email.label }} {{ form.Email() }}
+        <br>
+        {{ form.Password.label }} {{ form.Password() }}
+        <br>
+        {{ form.select.label }} {{ form.select() }}
+        <br>
+        {{ form.Submit() }}
+
+    </form>
+
+</div>
+
+{% endblock %}
